@@ -18,10 +18,9 @@ public class Main {
 
             Scanner Scan = new Scanner(System.in);
             boolean run = true;
-            FileWriter fileWriter = new FileWriter("src/main/resources/transactions.csv");
+            FileWriter fileWriter = new FileWriter("src/main/resources/transactions.csv", true);//appending here will ensure that the file will not be overwritten when running it again but instead add to the existing one
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             List<Transaction> transactions = new ArrayList<>(); // Array to store transactions
-
 
 
             while (true) {  //Home screen menu that require user input
@@ -53,8 +52,8 @@ public class Main {
                             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
                             String transactionCSV = String.format("%s|%s|%s|%s|%.2f",
-                            date.format(dateFormatter),
-                            time.format(timeFormatter),
+                                    date.format(dateFormatter),
+                                    time.format(timeFormatter),
                                     description,
                                     vendor,
                                     depositAmount);
@@ -63,7 +62,6 @@ public class Main {
                             bufferedWriter.newLine();
                             bufferedWriter.flush(); // ensuring data is written to file
                             System.out.println("Deposited successfully. ");
-
 
 
                         }
@@ -91,8 +89,8 @@ public class Main {
                                     time1.format(timeFormatter1),
                                     newdescription,
                                     newvendor,
-                                    paymentAmount *= -1 );
-                            //wrties to a negative amount
+                                    paymentAmount *= -1);
+                            //is shown as a negative amount in the csv file
                             //write to the csvFile
                             bufferedWriter.write(transactionCSV);
                             bufferedWriter.newLine();
@@ -105,9 +103,22 @@ public class Main {
                         break;
                     case "3":
                         System.out.println("Viewing Ledger ");
-                        for (Transaction t : transactions) {
-                            System.out.println(t);
+                        System.out.println("1. All entries ");
+                        System.out.println("2. Display Deposits ");
+                        System.out.println("3. Display Payments ");
+                        System.out.println("4. Display Reports");
+                        String selection2 = Scan.nextLine().trim().toLowerCase();
+
+                        if (selection2.equals("1")) {
+                            //the csv file is being read here
+                            BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
+                            String line;
+                            System.out.println("All Entries: ");
+                            while((line =reader.readLine())!=null) {
+                                System.out.println(line);
+                            }
                         }
+
                         System.out.println("Press enter to exit. ");
                         Scan.nextLine();
                         break;
@@ -125,13 +136,17 @@ public class Main {
             }
 
 
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
     }
-}
+                }
+
 
 
 
