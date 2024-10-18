@@ -109,15 +109,136 @@ public class Main {
                         System.out.println("4. Display Reports");
                         String selection2 = Scan.nextLine().trim().toLowerCase();
 
+
                         if (selection2.equals("1")) {
                             //the csv file is being read here
                             BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
                             String line;
                             System.out.println("All Entries: ");
-                            while((line =reader.readLine())!=null) {
+                            while ((line = reader.readLine()) != null) {
                                 System.out.println(line);
                             }
+
+                        } else if (selection2.equals("2")) {
+                            BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
+                            String line;
+                            System.out.println("All Deposits: ");
+                            while ((line = reader.readLine()) != null) {
+                                String[] parts = line.split("\\|");
+                                if (parts.length == 5) { //the amount of parts
+                                    double amount = Double.parseDouble(parts[4]); //Amount is the 5th part
+                                    if (amount > 0) { //this will check if it is a positive value
+                                        System.out.println(line);
+                                    }
+                                }
+                            }
+
+                        } else if (selection2.equals("3")) {
+                            BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
+                            String line;
+                            System.out.println("All Payments: ");
+                            while ((line = reader.readLine()) != null) {
+                                String[] parts = line.split("\\|");
+                                if (parts.length == 5) {
+                                    double amount = Double.parseDouble(parts[4]);
+                                    if (amount < 0) { //this will check if it is a negative value
+                                        System.out.println(line);
+
+                                    }
+                                }
+                            }
+                            reader.close();
+                            //This will generate the report screen
+                        }else if (selection2.equals("4")){
+                            while (true){
+                                System.out.println("Please choose an option below: ");
+                                System.out.println("1. Month to Date ");
+                                System.out.println("2. Previous Month ");
+                                System.out.println("3. Year to Date ");
+                                System.out.println("4. Previous Year ");
+                                System.out.println("5. Search by Vendor ");
+                                System.out.println("6. Return to ledger menu");
+
+                                String Option = Scan.nextLine().trim();
+                                if (Option.equals("6")){
+                                    break;
+                                }
+                                //I will use another switch case to create each option presented in reports option
+                                switch (Option){
+                                    case "1" :  //This case represents months to date in the reports option
+                                        BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
+                                        String line;
+                                        LocalDate startDate = LocalDate.now().withDayOfMonth(1);
+                                        LocalDate endDate = LocalDate.now();
+                                        System.out.println("Transactions from " + startDate + "to " + endDate + ":");
+                                        while ((line = reader.readLine()) != null ){
+                                            String[] parts = line.split("\\|");
+                                            if (parts.length == 5);
+                                            LocalDate date2 = LocalDate.parse(parts[0]);
+                                            if (date2.isEqual(startDate) || date2.isAfter(startDate)
+                                                    &&
+                                                    (date2.isEqual(endDate) || date2.isBefore(endDate))){
+                                                System.out.println(line);
+                                            } break;
+                                        } case "2": // this case previous months in the reports option
+                                            BufferedReader reader1 = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
+                                            LocalDate previousMonthGenesis = LocalDate.now().minusMonths(1).withDayOfMonth(1);
+                                            LocalDate previousMonthend = LocalDate.now().minusMonths(1).withDayOfMonth(previousMonthGenesis.lengthOfMonth());
+                                            System.out.println("Transactions from " + previousMonthGenesis + "to" + previousMonthend + ":");
+                                            while ((line = reader1.readLine()) != null){
+                                                String[] parts = line.split("\\|");
+                                                if (parts.length == 5 ) {
+                                                    LocalDate date2 = LocalDate.parse(parts[0]);
+                                                    if ((date2.isEqual(previousMonthGenesis) || date2.isAfter(previousMonthGenesis) &&
+                                                            date2.isEqual(previousMonthend) || date2.isBefore(previousMonthend))){
+                                                        System.out.println(line);
+                                                    }break;
+                                                }
+                                            } case "3": //this case displays year to date in the reports option
+                                        BufferedReader reader2 = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
+                                        LocalDate startOfYear = LocalDate.now().withDayOfYear(1);
+                                        LocalDate endDate2 = LocalDate.now();
+                                        System.out.println("Transaction from " + startOfYear + "to" + endDate2 + ":");
+                                        while ((line = reader2.readLine()) != null){
+                                            String[] parts = line.split("\\|");
+                                            if (parts.length == 5) {
+                                                LocalDate date2 = LocalDate.parse(parts[0]);
+                                                if ((date2.isEqual(startOfYear) || date2.isAfter(startOfYear) &&
+                                                        date2.isEqual(endDate2) || date2.isBefore(endDate2))){
+                                                    System.out.println(line);
+                                                }break;
+                                        }
+                                } case "4": //this case represents all previous years in the reports option
+                                        BufferedReader reader3 = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
+                                        LocalDate previousyear1 = LocalDate.now().minusYears(1).withDayOfYear(1);
+                                        LocalDate previousyear2 = LocalDate.now().minusYears(1).withDayOfYear(previousyear1.lengthOfYear());
+                                        System.out.println("Transactions from " + previousyear1 + "to " + previousyear2 + ":");
+                                        while ((line = reader3.readLine()) != null) {
+                                            String[] parts = line.split("\\|");
+                                            if (parts.length == 5){
+                                                LocalDate date2 = LocalDate.parse(parts[0]);
+                                                if ((date2.isEqual(previousyear1) || date2.isAfter(previousyear1) &&
+                                                        date2.isEqual(previousyear2) || date2.isBefore(previousyear2))){
+                                                    System.out.println(line);
+                                                }break;
+                                            }
+                                        } case "5": //this is the search by vendor code in the reports option
+                                        System.out.println("Enter vendor name: ");
+                                        String Vendor = Scan.nextLine();
+                                            BufferedReader reader4 = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
+                                            System.out.println("Transactions for vendor: " + Vendor );
+                                            while ((line = reader4.readLine()) != null){
+                                                String[] parts = line.split("\\|");
+                                                if (parts.length == 5 && parts[3].equalsIgnoreCase(Vendor)){
+                                                    System.out.println(line);
+                                                }
+                                            }
+
+
+                            }
                         }
+                        }
+
 
                         System.out.println("Press enter to exit. ");
                         Scan.nextLine();
@@ -125,6 +246,7 @@ public class Main {
                     case "4":
                         System.out.println("Goodbye ");
                         bufferedWriter.close();
+
                         Scan.close();
                         return;
                     default:
@@ -137,15 +259,18 @@ public class Main {
 
 
 
+                        } catch(IOException e){
+                        e.printStackTrace();
+                    }
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
                 }
+            }
+
+
+
+
+
 
 
 
